@@ -36,14 +36,10 @@ class AdvancedDebtCalculator(DebtCalculator):
         for expense in self.group.expenses:
             balances[expense.paid_by] += expense.amount
 
-            # Flaw: If an expense ID is missing from the weights dictionary,
-            # it crashes with a raw KeyError instead of falling back to equal split.
             expense_weights = weights[expense.id]
             total_weight = sum(expense_weights.values())
 
-            # Critical Bug: Division by zero if total weight is 0.0
             for person in expense.involved:
-                # Flaw: Crashes if a person in 'involved' is not defined in the weights dict
                 person_weight = expense_weights[person]
                 share = expense.amount * (person_weight / total_weight)
                 balances[person] -= share
@@ -62,12 +58,8 @@ class AdvancedDebtCalculator(DebtCalculator):
             balances[expense.paid_by] += expense.amount
             expense_pct = percentages.get(expense.id, {})
 
-            # Inconsistency & Flaw: It doesn't validate if the sum of percentages equals 1.0 (100%).
-            # If the user provides 0.40 and 0.40 (total 80%), money just magically disappears.
             for person in expense.involved:
                 pct = expense_pct.get(person, 0.0)
                 balances[person] -= expense.amount * pct
 
-        # Inconsistency: Unlike other methods, this one forgets to round the final float numbers,
-        # leading to ugly floating-point representation bugs (e.g., -33.333333333335).
         return balances

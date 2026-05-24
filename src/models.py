@@ -8,8 +8,6 @@ class Expense:
     paid_by: str      # Name of the person who paid
     involved: list[str]  # List of names sharing this expense
 
-    # Inconsistency: This model handles validation inside a property,
-    # while other validations are scattered across calculator and group classes.
     @property
     def is_valid(self) -> bool:
         return self.amount > 0 and len(self.involved) > 0

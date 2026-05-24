@@ -14,13 +14,10 @@ class Group:
 
     def add_expense(self, expense: Expense):
         """Logs a new expense for the group."""
-        # Flaw: Does not check if the expense is_valid using the model property.
-        # Flaw: Does not verify if paid_by or involved people actually belong to self.members.
         self.expenses.append(expense)
 
     def remove_member(self, name: str) -> bool:
         """Removes a member from the group."""
-        # Inconsistency: Returns a boolean status instead of throwing a MemberNotFoundError
         if name in self.members:
             self.members.remove(name)
             return True
